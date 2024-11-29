@@ -5,7 +5,6 @@ import backgroundImage from "../assets/images/sydneybridge.jpg";
 
 const HomeScreen = () => {
 	return (
-		<>
 			<div
 				style={{ backgroundImage: `url(${backgroundImage})` }}
 				className="relative bg-cover w-full h-screen font-poppins flex flex-col justify-center items-center"
@@ -42,7 +41,6 @@ const HomeScreen = () => {
 					</Link>
 				</div>
 			</div>
-		</>
 	);
 };
 
