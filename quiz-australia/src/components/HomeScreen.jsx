@@ -7,7 +7,7 @@ const HomeScreen = () => {
 	return (
 			<div
 				style={{ backgroundImage: `url(${backgroundImage})` }}
-				className="relative bg-cover w-full h-screen font-poppins flex flex-col justify-center items-center"
+				className="bg-cover bg-fixed w-full h-[80vh] font-poppins flex flex-col justify-center items-center"
 			>
 				<div className="absolute inset-0 bg-[#083763]/50"></div>
 
