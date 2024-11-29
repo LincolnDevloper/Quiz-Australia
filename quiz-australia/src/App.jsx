@@ -1,18 +1,21 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './Home';
-import Quiz from './Quiz';
-import Result from './Result';
+// src/App.jsx
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import HomeScreen from "./components/HomeScreen";
+import SetupScreen from "./components/SetupScreen";
+import QuizScreen from "./components/QuizScreen";
+import ResultScreen from "./components/ResultScreen";
 
-function App() {
+const App = () => {
   return (
-    <Router>
+    <Router> {/* Certificando-se de que o Router está envolto em toda a aplicação */}
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/quiz" element={<Quiz />} />
-        <Route path="/result" element={<Result />} />
+        <Route path="/" element={<HomeScreen />} /> {/* Tela inicial */}
+        <Route path="/setup" element={<SetupScreen />} /> {/* Tela de setup */}
+        <Route path="/quiz" element={<QuizScreen />} /> {/* Tela do quiz */}
+        <Route path="/result" element={<ResultScreen />} /> {/* Tela de resultados */}
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;
