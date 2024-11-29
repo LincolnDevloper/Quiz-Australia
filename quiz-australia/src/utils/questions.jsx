@@ -5,16 +5,19 @@ const questions = [
 		question: "Qual é a capital da Austrália?",
 		answer: "Canberra",
 		options: ["Sydney", "Melbourne", "Canberra", "Brisbane"],
+		image: "https://via.placeholder.com/400x200?text=Continente+da+Austr%C3%A1lia", // URL da imagem
 	},
 	{
 		question: "Qual é o maior deserto da Austrália?",
 		answer: "Deserto de Great Victoria",
 		options: ["Deserto de Simpson", "Deserto de Gibson", "Deserto de Great Victoria", "Deserto de Tanami"],
+		image: "https://via.placeholder.com/400x200?text=Continente+da+Austr%C3%A1lia", // URL da imagem
 	},
 	{
 		question: "Qual animal é símbolo nacional da Austrália?",
 		answer: "Canguru",
 		options: ["Canguru", "Coala", "Emu", "Ornitorrinco"],
+		image: "https://via.placeholder.com/400x200?text=Continente+da+Austr%C3%A1lia", // URL da imagem
 	},
 	{
 		question: "Qual é o nome da famosa formação rochosa vermelha localizada no centro da Austrália?",

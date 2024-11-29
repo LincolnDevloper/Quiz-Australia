@@ -98,6 +98,14 @@ const QuizScreen = () => {
 
 			<h2>{shuffledQuestions[currentQuestion]?.question}</h2>
 
+			{/* Exibe a imagem da pergunta */}
+			<img
+				src={shuffledQuestions[currentQuestion]?.image}
+				alt={`Imagem da pergunta ${currentQuestion + 1}`}
+				className="mb-4"
+				style={{ maxWidth: "100%", height: "auto" }} // Responsividade básica
+			/>
+
 			<div>
 				{shuffledQuestions[currentQuestion]?.options.map((option, index) => (
 					<button
