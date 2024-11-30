@@ -12,9 +12,6 @@ export default {
 			fontFamily: {
 				poppins: ["Poppins", "sans-serif"],
 			},
-			backgroundImage: {
-				"testebg": "url('./assets/images/sydney bridge.jpg')",
-			},
 		},
 	},
 	plugins: [],

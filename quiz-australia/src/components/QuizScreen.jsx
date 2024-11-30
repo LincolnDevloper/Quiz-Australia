@@ -23,7 +23,7 @@ const QuizScreen = () => {
 
 	const userName = localStorage.getItem("userName") || "Usuário";
 	const userAvatar =
-		localStorage.getItem("avatar") || "https://via.placeholder.com/150";
+		localStorage.getItem("avatar") || "https://via.placeholder.com/avatar";
 
 	useEffect(() => {
 		// Embaralha as perguntas sempre que o componente é montado
@@ -79,43 +79,57 @@ const QuizScreen = () => {
 
 	return (
 		<div>
-			{/* Exibe o avatar e nome do usuário */}
-			<div>
-				<img
-					src={userAvatar}
-					alt="Avatar do usuário"
-					style={{ width: "150px", height: "150px" }}
-				/>
-				<p>{userName}</p>
+			{/* Botão de Sair */}
+			<button
+				onClick={handleExitQuiz}
+				className="text-2xl w-14 h-14 bg-red-700 text-white rounded-full"
+			>
+				<i className="fa-solid fa-arrow-right-from-bracket"></i>
+			</button>
+			<div className="flex flex-row justify-center h-10">
+				{/* Exibe o avatar e nome do usuário */}
+				<div className="flex flex-col items-center absolute transform -translate-y-[55px]">
+					<img
+						className="w-20 h-full rounded-full"
+						src={userAvatar}
+						alt="Avatar do usuário"
+					/>
+					<p className="text-lg font-semibold absolute transform translate-y-[68px] p-1 bg-red-400/50 w-auto h-auto text-center">
+						{userName}
+					</p>
+				</div>
 			</div>
-
 			{/* Barra de Progresso */}
 			<progress
 				value={progress}
 				max="100"
-				className="w-full h-3 bg-gray-200 rounded-lg mb-5"
+				className="w-full h-4 relative"
 			></progress>
 
-			<h2>{shuffledQuestions[currentQuestion]?.question}</h2>
+			<h2 className="text-2xl m-4 text-center font-bold text-[#333333]">
+				{shuffledQuestions[currentQuestion]?.question}
+			</h2>
 
 			{/* Exibe a imagem da pergunta */}
 			<img
 				src={shuffledQuestions[currentQuestion]?.image}
 				alt={`Imagem da pergunta ${currentQuestion + 1}`}
-				className="mb-4"
-				style={{ maxWidth: "100%", height: "auto" }} // Responsividade básica
+				className="p-4 w-max h-auto rounded-[32px]"
 			/>
 
-			<div>
+			{/* Feedback após a resposta */}
+			{isAnswered && (
+				<p className="flex justify-center font-semibold">{feedback}</p>
+			)}
+
+			<div className="grid grid-cols-2 p-2">
 				{shuffledQuestions[currentQuestion]?.options.map((option, index) => (
 					<button
 						key={index}
 						onClick={() => handleAnswerSelect(option)}
 						disabled={isAnswered}
+						className="px-3 py-5 m-1 border-solid border-[1px] border-black rounded "
 						style={{
-							padding: "10px 20px",
-							margin: "5px",
-							border: "1px solid blue",
 							backgroundColor:
 								selectedAnswer === option
 									? option === shuffledQuestions[currentQuestion].answer
@@ -136,40 +150,32 @@ const QuizScreen = () => {
 				))}
 			</div>
 
-			{/* Feedback após a resposta */}
-			{isAnswered && <p>{feedback}</p>}
-
 			{/* Botão para ir para a próxima pergunta */}
 			{isAnswered && (
-				<button onClick={goToNextQuestion}>Próxima Pergunta</button>
+				<button
+					className="bg-green-400 p-4 w-full text-white text-2xl"
+					onClick={goToNextQuestion}
+				>
+					Próxima Pergunta
+				</button>
 			)}
-
-			{/* Botão de Sair */}
-			<button onClick={handleExitQuiz} style={{ marginTop: "10px" }}>
-				Sair
-			</button>
 
 			{/* Modal de confirmação */}
 			{showModal && (
 				<div
-					style={{
-						position: "fixed",
-						top: "50%",
-						left: "50%",
-						transform: "translate(-50%, -50%)",
-						backgroundColor: "white",
-						padding: "20px",
-						border: "1px solid #ccc",
-						borderRadius: "10px",
-						boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-					}}
+					className="fixed top-[50%] left-[50%] transform -translate-x-[50%] -translate-y-[50%] bg-white p-5 border-solid border-[1px] border-[#ccc] rounded-xl shadow-xl"
 				>
-					<h3>Você tem certeza que quer sair?</h3>
-					<div>
-						<button onClick={confirmExit} style={{ marginRight: "10px" }}>
+					<h3 className="font-semibold">Você tem certeza que quer sair?</h3>
+					<div className="flex justify-center">
+						<button
+							onClick={confirmExit}
+							className="mr-4 bg-green-800 w-full h-auto"
+						>
 							Sim
 						</button>
-						<button onClick={closeModal}>Não</button>
+						<button onClick={closeModal} className="bg-red-800 w-full h-auto">
+							Não
+						</button>
 					</div>
 				</div>
 			)}
