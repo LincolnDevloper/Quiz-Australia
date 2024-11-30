@@ -7,7 +7,7 @@ const HomeScreen = () => {
 	return (
 		<div
 			style={{ backgroundImage: `url(${ponte})` }}
-			className="bg-cover w-full h-screen overflow-hidden font-poppins flex flex-col justify-around"
+			className="bg-cover bg-fixed w-full h-screen overflow-hidden font-poppins flex flex-col justify-around"
 		>
 			<div className="absolute inset-0 bg-[#083763]/40"></div>
 
