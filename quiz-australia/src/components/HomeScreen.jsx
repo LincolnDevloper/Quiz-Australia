@@ -7,7 +7,7 @@ const HomeScreen = () => {
 	return (
 		<div
 			style={{ backgroundImage: `url(${ponte})` }}
-			className="bg-cover bg-fixed w-screen h-screen font-poppins flex flex-col justify-around"
+			className="bg-cover w-full h-screen font-poppins flex flex-col justify-around"
 		>
 			<div className="absolute inset-0 bg-[#083763]/40"></div>
 
@@ -38,9 +38,9 @@ const HomeScreen = () => {
 			</div>
 
 			<div className="z-10 text-white text-center">
-				<h1 className="text-2xl font-medium">CEMEIT - 2024</h1>
+				<h1 className="text-2xl font-medium mb-2">CEMEIT - 2024</h1>
 				<Link to="/credits">
-					<button className="bg-blue-600 p-3 m-3 rounded-xl">Creditos</button>
+					<button className="bg-blue-600 hover:bg-blue-500 p-3 rounded-xl">Creditos</button>
 				</Link>
 			</div>
 		</div>
