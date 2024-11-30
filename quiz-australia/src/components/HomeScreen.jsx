@@ -7,13 +7,13 @@ const HomeScreen = () => {
 	return (
 		<div
 			style={{ backgroundImage: `url(${ponte})` }}
-			className="bg-cover bg-fixed w-full h-screen overflow-hidden overscroll-contain font-poppins flex flex-col justify-around"
+			className="bg-cover bg-fixed w-full h-screen overflow-hidden overscroll-none font-poppins flex flex-col justify-around"
 		>
 			<div className="absolute inset-0 bg-[#083763]/40"></div>
 
 			<div className=" z-10 text-white text-center">
 				<h1 className="text-2xl font-semibold">2º Ano L</h1>
-				<p className="text-xl font-normal tracking-[5px]">Apresenta</p>
+				<p className="text-xl text-red-700 font-normal tracking-[5px]">Apresenta</p>
 			</div>
 
 			<div className="relative flex flex-col items-center">
