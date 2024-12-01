@@ -51,7 +51,7 @@ const SetupScreen = () => {
 				placeholder="Digite seu nome"
 				value={name}
 				onChange={(e) => setName(e.target.value)} // Atualiza o nome conforme o usuário digita
-				className="text-xl border-solid border-black border-[1px] rounded-full p-4"
+				className="text-xl capitalize border-solid border-black border-[1px] rounded-full p-4"
 			/>
 		</div>
 
