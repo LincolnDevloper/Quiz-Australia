@@ -1,79 +1,99 @@
 // src/components/QuizScreen.jsx
 import { useState, useEffect } from "react";
-import questions from "../utils/questions"; // Importa as perguntas de utils/questions.js
+import questoes from "../utils/questions"; // Importa as perguntas de utils/questions.js
+import { logEvent, analytics } from "../firebase"; // Importando logEvent
 
 // Função para embaralhar as questões
-const shuffleQuestions = (questions) => {
-	for (let i = questions.length - 1; i > 0; i--) {
+const embaralharQuestões = (questões) => {
+	for (let i = questões.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
-		[questions[i], questions[j]] = [questions[j], questions[i]]; // Troca os elementos
+		[questões[i], questões[j]] = [questões[j], questões[i]]; // Troca os elementos
 	}
-	return questions;
+	return questões;
 };
 
-const QuizScreen = () => {
-	const [currentQuestion, setCurrentQuestion] = useState(0);
-	const [selectedAnswer, setSelectedAnswer] = useState("");
-	const [isAnswered, setIsAnswered] = useState(false);
+const TelaQuiz = () => {
+	const [questaoAtual, setQuestaoAtual] = useState(0);
+	const [questaoSelecionada, setQuestaoSelecionada] = useState("");
+	const [estaRespondido, setEstaRespondido] = useState(false);
 	const [feedback, setFeedback] = useState("");
-	const [score, setScore] = useState(0);
-	const [progress, setProgress] = useState(0);
-	const [showModal, setShowModal] = useState(false); // Controle do modal de sair
-	const [shuffledQuestions, setShuffledQuestions] = useState([]); // Perguntas embaralhadas
+	const [pontuacao, setPontuacao] = useState(0);
+	const [progresso, setProgresso] = useState(0);
+	const [mostrarModal, setMostrarModal] = useState(false); // Controle do modal de sair
+	const [questoesEmbaralhadas, setQuestoesEmbaralhadas] = useState([]); // Perguntas embaralhadas
 
-	const userName = localStorage.getItem("userName") || "Usuário";
-	const userAvatar =
+	const nomeDoUsuario = localStorage.getItem("userName") || "Usuário";
+	const avatarDoUsuario =
 		localStorage.getItem("avatar") || "https://via.placeholder.com/avatar";
 
 	useEffect(() => {
 		// Embaralha as perguntas sempre que o componente é montado
-		setShuffledQuestions(shuffleQuestions([...questions])); // Faz uma cópia das perguntas e embaralha
+		setQuestoesEmbaralhadas(embaralharQuestões([...questoes])); // Faz uma cópia das perguntas e embaralha
 	}, []);
 
 	useEffect(() => {
-		setProgress(((currentQuestion + 1) / shuffledQuestions.length) * 100); // Atualiza o progresso
-	}, [currentQuestion, shuffledQuestions]);
+		setProgresso(((questaoAtual + 1) / questoesEmbaralhadas.length) * 100); // Atualiza o progresso
+	}, [questaoAtual, questoesEmbaralhadas]);
 
 	useEffect(() => {
 		// Inicializa a pontuação no localStorage quando o quiz começa
-		localStorage.setItem("score", score);
-		localStorage.setItem("questions", JSON.stringify(shuffledQuestions)); // Salva as questões embaralhadas no localStorage
-	}, [score, shuffledQuestions]);
+		localStorage.setItem("score", pontuacao);
+		localStorage.setItem("questions", JSON.stringify(questoesEmbaralhadas)); // Salva as questões embaralhadas no localStorage
+	}, [pontuacao, questoesEmbaralhadas]);
 
-	const handleAnswerSelect = (answer) => {
-		setSelectedAnswer(answer);
-		setIsAnswered(true);
+	const selecionarResposta = (resposta) => {
+		setQuestaoSelecionada(resposta);
+		setEstaRespondido(true);
 
-		if (answer === shuffledQuestions[currentQuestion].answer) {
+		if (resposta === questoesEmbaralhadas[questaoAtual].answer) {
 			setFeedback("✅ Correto!");
-			setScore(score + 1);
+			setPontuacao(pontuacao + 1);
+
+			// Logando evento de resposta correta
+			logEvent(analytics, 'responder_questao', {
+				questao_id: questaoAtual,
+				correta: true,
+			  });
 		} else {
 			setFeedback("❌ Errado!");
+
+			 // Logando evento de resposta errada
+			 logEvent(analytics, 'responder_questao', {
+				questao_id: questaoAtual,
+				correta: false,
+			  });
 		}
 	};
 
-	const goToNextQuestion = () => {
-		if (currentQuestion < shuffledQuestions.length - 1) {
-			setCurrentQuestion(currentQuestion + 1);
-			setSelectedAnswer("");
-			setIsAnswered(false);
+	const irParaProximaQuestao = () => {
+		if (questaoAtual < questoesEmbaralhadas.length - 1) {
+			setQuestaoAtual(questaoAtual + 1);
+			setQuestaoSelecionada("");
+			setEstaRespondido(false);
 			setFeedback("");
 		} else {
-			localStorage.setItem("score", score);
+			localStorage.setItem("score", pontuacao);
 			window.location.href = "/result"; // Redireciona para a tela de resultado
+			
+			 // Logando evento de finalização do quiz
+			 logEvent(analytics, 'finalizar_quiz', {
+				pontuacao: pontuacao,
+				total_questoes: questoes.length,
+				nome_usuario: nomeDoUsuario,
+			  });
 		}
 	};
 
-	const handleExitQuiz = () => {
-		setShowModal(true); // Exibe o modal
+	const sairDoQuiz = () => {
+		setMostrarModal(true); // Exibe o modal
 	};
 
-	const closeModal = () => {
-		setShowModal(false); // Fecha o modal
+	const fecharModal = () => {
+		setMostrarModal(false); // Fecha o modal
 	};
 
-	const confirmExit = () => {
-		setShowModal(false); // Fecha o modal
+	const confirmarSaida = () => {
+		setMostrarModal(false); // Fecha o modal
 		window.location.href = "/"; // Redireciona para a tela inicial
 	};
 
@@ -81,8 +101,8 @@ const QuizScreen = () => {
 		<div>
 			{/* Botão de Sair */}
 			<button
-				onClick={handleExitQuiz}
-				className="text-2xl w-14 h-14 bg-red-700 text-white rounded-full"
+				onClick={sairDoQuiz}
+				className="text-2xl w-14 h-14 bg-red-700 text-white rounded-br-full"
 			>
 				<i className="fa-solid fa-arrow-right-from-bracket"></i>
 			</button>
@@ -91,54 +111,55 @@ const QuizScreen = () => {
 				<div className="flex flex-col items-center absolute transform -translate-y-[55px]">
 					<img
 						className="w-20 h-full rounded-full"
-						src={userAvatar}
+						src={avatarDoUsuario}
 						alt="Avatar do usuário"
 					/>
-					<p className="text-lg font-semibold absolute transform translate-y-[68px] p-1 bg-red-400/50 w-auto h-auto text-center">
-						{userName}
+					<p className="text-lg font-semibold absolute transform capitalize
+					translate-y-[68px] p-1 bg-red-400/50 w-auto h-auto text-center">
+						{nomeDoUsuario}
 					</p>
 				</div>
 			</div>
 			{/* Barra de Progresso */}
 			<progress
-				value={progress}
+				value={progresso}
 				max="100"
 				className="w-full h-4 relative"
 			></progress>
 
 			<h2 className="text-2xl m-4 text-center font-bold text-[#333333]">
-				{shuffledQuestions[currentQuestion]?.question}
+				{questoesEmbaralhadas[questaoAtual]?.question}
 			</h2>
 
 			{/* Exibe a imagem da pergunta */}
 			<img
-				src={shuffledQuestions[currentQuestion]?.image}
-				alt={`Imagem da pergunta ${currentQuestion + 1}`}
+				src={questoesEmbaralhadas[questaoAtual]?.image}
+				alt={`Imagem da pergunta ${questaoAtual + 1}`}
 				className="p-4 w-max h-auto rounded-[32px]"
 			/>
 
 			{/* Feedback após a resposta */}
-			{isAnswered && (
+			{estaRespondido && (
 				<p className="flex justify-center font-semibold">{feedback}</p>
 			)}
 
 			<div className="grid grid-cols-2 p-2">
-				{shuffledQuestions[currentQuestion]?.options.map((option, index) => (
+				{questoesEmbaralhadas[questaoAtual]?.options.map((option, index) => (
 					<button
 						key={index}
-						onClick={() => handleAnswerSelect(option)}
-						disabled={isAnswered}
+						onClick={() => selecionarResposta(option)}
+						disabled={estaRespondido}
 						className="px-3 py-5 m-1 border-solid border-[1px] border-black rounded "
 						style={{
 							backgroundColor:
-								selectedAnswer === option
-									? option === shuffledQuestions[currentQuestion].answer
+								questaoSelecionada === option
+									? option === questoesEmbaralhadas[questaoAtual].answer
 										? "green"
 										: "red"
 									: "white",
 							color:
-								selectedAnswer === option
-									? option === shuffledQuestions[currentQuestion].answer
+								questaoSelecionada === option
+									? option === questoesEmbaralhadas[questaoAtual].answer
 										? "white"
 										: "white"
 									: "blue",
@@ -151,29 +172,29 @@ const QuizScreen = () => {
 			</div>
 
 			{/* Botão para ir para a próxima pergunta */}
-			{isAnswered && (
+			{estaRespondido && (
 				<button
 					className="bg-green-400 p-4 w-full text-white text-2xl"
-					onClick={goToNextQuestion}
+					onClick={irParaProximaQuestao}
 				>
 					Próxima Pergunta
 				</button>
 			)}
 
 			{/* Modal de confirmação */}
-			{showModal && (
+			{mostrarModal && (
 				<div
 					className="fixed top-[50%] left-[50%] transform -translate-x-[50%] -translate-y-[50%] bg-white p-5 border-solid border-[1px] border-[#ccc] rounded-xl shadow-xl"
 				>
-					<h3 className="font-semibold">Você tem certeza que quer sair?</h3>
+					<h3 className="text-center font-semibold mb-5">Você tem certeza que quer sair?</h3>
 					<div className="flex justify-center">
 						<button
-							onClick={confirmExit}
-							className="mr-4 bg-green-800 w-full h-auto"
+							onClick={confirmarSaida}
+							className="mr-4 text-white bg-green-800 w-full h-auto rounded"
 						>
 							Sim
 						</button>
-						<button onClick={closeModal} className="bg-red-800 w-full h-auto">
+						<button onClick={fecharModal} className="bg-red-800 text-white w-full h-auto rounded">
 							Não
 						</button>
 					</div>
@@ -183,4 +204,4 @@ const QuizScreen = () => {
 	);
 };
 
-export default QuizScreen;
+export default TelaQuiz;
