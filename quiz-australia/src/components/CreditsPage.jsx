@@ -55,7 +55,7 @@ const CreditsPage = () => {
 								<i className="fa-brands fa-linkedin"></i> LinkedIn
 							</a>
 							<a
-								href="https://instagram.com/seu-usuario"
+								href="https://www.instagram.com/lincxlnsan?igsh=MXRjZTBhZXEybWwweA=="
 								target="_blank"
 								className="px-4 py-2 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white rounded-lg hover:opacity-90 focus:ring-2 focus:ring-pink-400"
 							>
