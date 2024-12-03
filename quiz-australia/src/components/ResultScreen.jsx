@@ -1,16 +1,29 @@
 // src/components/ResultScreen.jsx
+import { useEffect } from "react";
 import parabens from "../assets/images/tela_final_premio.png";
+import { ref, update } from "firebase/database"; // Importando o Firebase
+import { database } from "../firebase"; // Importando o banco de dados
 
 const TelaResultado = () => {
-	const pontuacao = parseInt(localStorage.getItem("score")) || 0; // Obtém a pontuação do localStorage e força a conversão para número
-	const perguntas = JSON.parse(localStorage.getItem("questions")) || []; // Obtém as perguntas do localStorage
-	const totalDePerguntas = perguntas.length; // Número total de perguntas
+	const pontuacao = parseInt(localStorage.getItem("score")) || 0; // Obtém a pontuação
 	const nomeDoUsuario = localStorage.getItem("userName") || "Usuário";
-	const avatarDoUsuario =
-		localStorage.getItem("avatar") || "https://via.placeholder.com/150";
+	const avatarDoUsuario = localStorage.getItem("avatar") || "https://via.placeholder.com/150";
+	const idUnico = localStorage.getItem("uniqueId"); // ID único do usuário
 
-	// Pega o ID único do localStorage
-	const idUnico = localStorage.getItem("uniqueId");
+	// Função para atualizar o status no Firebase
+	const atualizarStatusNoFirebase = (idUnico, pontuacao) => {
+		const userRef = ref(database, 'users/' + idUnico); // Referência do usuário no Firebase
+		update(userRef, {
+			status: pontuacao >= 8 ? "Aprovado" : "Não aprovado"
+		});
+	};
+
+	// Atualizar o status assim que a tela for carregada
+	useEffect(() => {
+		if (idUnico) {
+			atualizarStatusNoFirebase(idUnico, pontuacao); // Atualiza o status no Firebase
+		}
+	}, [pontuacao, idUnico]);
 
 	// Função para reiniciar o quiz
 	const reiniciarQuiz = () => {
@@ -23,7 +36,7 @@ const TelaResultado = () => {
 	};
 
 	return (
-		<div className="bg-[#0E2431] w-full h-[119vh] text-white">
+		<div className="bg-[#0E2431] w-full h-[122vh] text-white">
 			<div className="flex justify-center p-6">
 				<img
 					src={parabens}
@@ -41,48 +54,56 @@ const TelaResultado = () => {
 			{pontuacao === 0 ? (
 				<h2 className="text-4xl capitalize font-bold text-center sm:text-3xl p-3">
 					Tente novamente, {nomeDoUsuario}!
-				</h2> // Exibe mensagem personalizada se não acertou nada
+				</h2>
 			) : (
 				<h2 className="text-4xl capitalize font-bold text-center sm:text-3xl p-3">
 					Parabéns, {nomeDoUsuario}!
-				</h2> // Exibe "Parabéns" se o usuário acertou alguma coisa
+				</h2>
 			)}
 
 			{/* Verificação de gabaritar e mensagens motivacionais */}
-			{pontuacao === totalDePerguntas ? (
+			{pontuacao >= 8 ? (
 				<div className="p-4 w-auto h-30 flex flex-col bg-lime-700 sm:w-full sm:p-4 rounded-lg">
-					<p className="text-xl capitalize font-bold">{`Você gabaritou o quiz!`}</p>
+					<p className="text-xl capitalize font-bold">{`Você acertou ${pontuacao} ${pontuacao === 1 ? "questão" : "questões"}!`}</p>
 					<div>
 						<p>
 							Seu <b>ID</b> para resgatar o prêmio:{" "}
 							<strong className="uppercase">{idUnico}</strong>
 						</p>
 					</div>
-					{/* Mensagem para quem gabaritou */}
 					<p className="text-justify">
-						Venha receber seu <b>Prêmio</b> na banca do <b>2ºL</b>! 🎉
-					</p>{" "}
-					{/* Mensagem sobre o prêmio */}
+						Venha receber a sua <b>Lembrancinha</b> na banca do <b>2ºL</b>! 🎉
+					</p>
 					<p className="">
-						<i className="fa-solid fa-triangle-exclamation text-yellow-500 text-xl"></i>{" "}
-						Este é o seu comprovante para resgatar o seu prêmio, mostre na banca
-						para resgatar
+						<i className="fa-solid fa-triangle-exclamation text-yellow-500 text-xl"></i> Este é o seu comprovante para resgatar o seu prêmio, mostre na banca para resgatar
 					</p>
 				</div>
 			) : pontuacao === 0 ? (
-				<p className="text-justify mx-10 text-lg sm:text-md my-3">
-					NÃO <b className="bg-amber-400/40 px-1">Desista!!!</b> <br />
-					Por favor, eu te peço que <b className="underline">tente novamente!!</b>
-				</p> // Exibe se o usuário acertou 0 perguntas
+				<>
+					<p className="text-justify mx-10 text-lg sm:text-md my-3">
+						NÃO <b className="bg-amber-400/40 px-1">Desista!!!</b> <br />
+						Por favor, eu te peço que <b className="underline">tente novamente!!</b>
+					</p>
+					<p className="text-center text-lg py-4">
+						(Continue tentando para ganhar um prêmio! você precisa acertar no mínimo <i className="mx-1 px-1 py-1 font-bold bg-green-700 rounded">8</i> questões)
+					</p>
+				</>
 			) : (
-				<p className="flex justify-center m-4 text-2xl font-semibold sm:text-lg">
-					Você acertou <i className="mx-1 px-1 bg-green-700 rounded transform -rotate-[15deg]">{pontuacao}</i>{pontuacao === 1 ? "pergunta" : "perguntas"}!{" "}
-					{/* Correção de pluralidade */}
-				</p> // Exibe o número de perguntas acertadas
+				<>
+					<p className="flex justify-center m-4 text-2xl font-semibold sm:text-lg">
+						Você acertou{" "}
+						<i className="mx-1 px-1 bg-green-700 rounded transform -rotate-[15deg]">
+							{pontuacao}
+						</i>
+						{pontuacao === 1 ? "pergunta" : "perguntas"}!{" "}
+					</p>
+					<p className="text-center text-lg py-4">
+						(Continue tentando para ganhar um prêmio! você precisa acertar no mínimo <i className="mx-1 px-1 py-1 font-bold bg-green-700 rounded">8</i> questões)
+					</p>
+				</>
 			)}
 
 			<div className="flex justify-center">
-				{/* Botão para tentar novamente */}
 				<button
 					className="bg-[#33B249] text-2xl p-4 w-[250px] rounded-full cursor-pointer sm:w-full"
 					onClick={reiniciarQuiz}

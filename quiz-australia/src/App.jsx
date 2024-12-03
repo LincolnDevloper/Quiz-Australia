@@ -16,7 +16,7 @@ const App = () => {
         <Route path="/quiz" element={<QuizScreen />} /> {/* Tela do quiz */}
         <Route path="/result" element={<ResultScreen />} /> {/* Tela de resultados */}
         <Route path="/credits" element={<CreditsPage />} /> {/* Tela de resultados */}
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/criptosala" element={<AdminPage />} />
       </Routes>
     </Router>
   );
