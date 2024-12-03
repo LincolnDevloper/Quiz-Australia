@@ -48,7 +48,7 @@ const CreditsPage = () => {
 								<i className="fa-brands fa-github"></i> GitHub
 							</a>
 							<a
-								href="www.linkedin.com/in/lincolndev"
+								href="https://www.linkedin.com/in/lincolndev"
 								target="_blank"
 								className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 focus:ring-2 focus:ring-blue-400"
 							>
