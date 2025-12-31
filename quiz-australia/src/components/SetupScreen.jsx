@@ -17,7 +17,7 @@ const avatars = [
 		id: 2,
 		name: "Coala",
 		image:
-			"https://buywallart.ca/cdn/shop/products/240_F_633516157_7esm9acEIKw3VJlWHouLpwk0hzxH4hxW.jpg?v=1700069380",
+			"https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Koala_climbing_tree.jpg/330px-Koala_climbing_tree.jpg",
 	},
 	{
 		id: 3,
